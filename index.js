@@ -10,6 +10,8 @@ MercadoPago.configure({
     access_token: secrets.Access_Token
 });
 
+
+
 //Rotes
 app.get('/', (req, res) => {
     res.send('hello');
@@ -25,7 +27,7 @@ app.get('/payment', async (req, res) => {
                 title: 'smartphone 5g',
                 quantity: 1,
                 currency_id: 'BRL',
-                unit_price: parseFloat(20.99)
+                unit_price: parseFloat(1220.99)
             }
         ],
         payer: {
@@ -34,16 +36,23 @@ app.get('/payment', async (req, res) => {
         external_reference: id
     }
 
+    console.log('ID ' + id);
+
     try{
         const payment = await MercadoPago.preferences.create(data);
         return res.redirect(payment.body.init_point);
     }catch(err){
         console.log(err);
-        return res.send(err.message);
+        return res.send(err.status_detail);
     }
     
 });
 
+
+app.post('/not', (req, res) => {
+    console.log(req.query);
+    res.send('ok');
+});
 
 app.listen(SERVERPORT, () => {
     console.log('server run');
